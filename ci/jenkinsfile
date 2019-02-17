@@ -10,7 +10,25 @@ pipeline {
 
     }
     stages {
-        stage('build final artifact') {
+        stage('CODE CLONE') {
+            git 'https://github.com/asif-sh/FinalEx1.git'
+        }
+        stage('BUILD') {
+            sh 'mvn package'
+            sh 'docker build -t snscaimito/ledger-service:${env.BUILD_ID} .'
+            sh """
+              docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
+              docker tag ${DOCKERHUB_REPO_NAME}:${env.BUILD_ID}
+              docker push ${DOCKERHUB_REPO_NAME}:${env.BUILD_ID}
+        }
+        stage('TEST') {
+        }
+        stage('RELEASE') {
+        }
+        stage('Deploy (legacy)') {
+        }
+        stage('Deploy (MODERN)') {
+        }
             git url: 'https://github.com/zivkashtan/course.git'
             sh 'mvn package'
 
